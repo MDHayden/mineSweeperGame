@@ -8,7 +8,7 @@ HOW TO USE
 - Use right clic tu put a flag if you think there is a bomb
 - Use left clic to discover a box
 - If you're unlucky, you will discover a bomb and lose the game ;)
-- Otherwise, the number of boms nearby will be displayed or game's board will be discovered
+- Otherwise, the number of bombs nearby will be displayed or game's board will be discovered
 
 Good luck and enjoy the game !
 
