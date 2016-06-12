@@ -4,7 +4,7 @@
 
 *********************************************************************************************************************************************
 HOW TO USE
-mineSweeperGame is just like ever minesweeper game : you have to discover all the boxes without touching a bomb.
+<br /> mineSweeperGame is just like ever minesweeper game : you have to discover all the boxes without touching a bomb.
 - Use right clic tu put a flag if you think there is a bomb
 - Use left clic to discover a box
 - If you're unlucky, you will discover a bomb and lose the game ;)
