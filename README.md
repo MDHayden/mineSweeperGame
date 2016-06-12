@@ -1,6 +1,6 @@
 # mineSweeperGame
 [JAVA] Strict MVC model
-Project made at Polytech Lyon 1 (french engineering school)
+<br /> Project made at Polytech Lyon 1 (french engineering school)
 
 *********************************************************************************************************************************************
 HOW TO USE
