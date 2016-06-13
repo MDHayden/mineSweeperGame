@@ -1,5 +1,5 @@
 # mineSweeperGame
-[JAVA] Strict MVC model
+[JAVA] Strict MVC model using Java FX
 <br /> Project made at Polytech Lyon 1 (french engineering school)
 
 *********************************************************************************************************************************************
