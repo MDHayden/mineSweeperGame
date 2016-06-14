@@ -116,62 +116,45 @@ public class Board2D extends Board {
     }
     
     @Override
+    public void search(int posX, int posY){
+        Box b = this.board2D[posX][posY];
+        
+        if(!b.isFlag() && !b.isVisible()) {
+            b.setVisible(true);
+            this.setNb_box_discovered(nb_box_discovered+1);            
+            if(!b.isTrapped()) {
+                if((b.getNumberOfNeighborTrapped() == 0)){
+                // Top box
+                if (posY-1>-1) {
+                    search(posX,posY-1);
+                }
+                // Left box
+                if (posX-1>-1) {
+                    search(posX-1,posY);
+                }
+
+                // Right box
+                if (posX+1<this.getNbRowColumns()) {
+                    search(posX+1,posY);
+                }
+
+                // Bottom box
+                if (posY+1<this.getNbRowColumns()) {
+                    search(posX,posY+1);
+                }         
+            }
+            }
+        }
+        
+        
+    }
+    
+    
+    @Override
     public void discover(int posX, int posY ){
         Box b = this.board2D[posX][posY]; 
         
-        if(b.isFlag() || b.isVisible()) {
-            //on ne peut pas découvrir la case
-        } else {
-            b.setVisible(true);
-            this.setNb_box_discovered(nb_box_discovered+1);            
-            if(b.isTrapped()) {
-            //end of the game
-            } else {
-
-                if((b.getNumberOfNeighborTrapped() == 0)){
-
-                    // Right-top corner box
-                    if (posX-1>-1 && posY-1>-1) {
-                        discover(posX-1,posY-1);
-                    }
-
-                    // Top box
-                    if (posY-1>-1) {
-                        discover(posX,posY-1);
-                    }
-
-                    // Left-top corner box
-                    if (posY-1>-1 && posX+1<this.getNbRowColumns()) {
-                        discover(posX+1,posY-1);
-                    }
-
-                    // Left box
-                    if (posX-1>-1) {
-                        discover(posX-1,posY);
-                    }
-
-                    // Right box
-                    if (posX+1<this.getNbRowColumns()) {
-                        discover(posX+1,posY);
-                    }
-
-                    // Right-bottom corner box
-                    if (posY+1<this.getNbRowColumns() && posX+1<this.getNbRowColumns()) {
-                        discover(posX+1,posY+1);
-                    }
-
-                    // Bottom box
-                    if (posY+1<this.getNbRowColumns()) {
-                        discover(posX,posY+1);
-                    }
-
-                    // Left-bottom corner box
-                    if (posX-1>1 && posY+1<this.getNbRowColumns()) {
-                        discover(posX-1,posY+1);
-                    }            
-                }
-            }
-        }
+        search(posX,posY);
         setChanged();
         notifyObservers();
     }

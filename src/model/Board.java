@@ -25,6 +25,9 @@ public abstract class Board extends Observable {
     public void discover(int posX, int posY){
     }
     
+    public void search(int posX, int posY){
+    }
+    
     // Generates board's gamme
     public void generateBoard(){
         
