@@ -32,13 +32,16 @@ public class MineSweeperGameReborn extends Application {
     @Override
     public void start(Stage primaryStage) {      
         BorderPane rootPane = new BorderPane();
-        Scene scene = new Scene(rootPane, 650, 700);        
-        game = new Board2D(3,10);
+        Scene scene = new Scene(rootPane, 600, 800);        
+        game = new Board2D(20,10);
         game.generateBoard();
         
         Text text = new Text();
         text.setFont(new Font(20));
         text.setText("Welcome in the mineSweeperGame !");
+        
+        Image imageSmiley = new Image("./assets/NeutralSmiley.PNG");
+        ImageView imgViewSmiley = new ImageView(imageSmiley);
         
         GridPane gPane = new GridPane();
         gPane.setPadding(new Insets(50));       
@@ -52,109 +55,117 @@ public class MineSweeperGameReborn extends Application {
                 imgView.setImage(image);
                 gPane.add(imgView,i,j);
                 
-                imgView.setOnMouseClicked(new EventHandler <MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        Node source = (Node)event.getSource() ;
-                        Integer colIndex = GridPane.getColumnIndex(source);
-                        Integer rowIndex = GridPane.getRowIndex(source);
-                        Box currentBox = game.getBox(colIndex, rowIndex);               
-                        
-                        // Right click : we have to add a flag
-                        if (event.getButton() == MouseButton.SECONDARY){
-                            game.rightClic(currentBox);
-                        }
-                        
-                        // Left click :
-                        if (event.getButton() == MouseButton.PRIMARY){
-                            if(currentBox.isFlag()){
-                                game.leftClic(currentBox);
-                            } else {
-                                game.discover(colIndex, rowIndex);
-                            }
+                imgView.setOnMouseClicked((MouseEvent event) -> {
+                    Node source = (Node)event.getSource() ;
+                    Integer colIndex = GridPane.getColumnIndex(source);
+                    Integer rowIndex = GridPane.getRowIndex(source);
+                    Box currentBox = game.getBox(colIndex, rowIndex);
+                    Image imageSmiley1;
+                    if (event.getButton() == MouseButton.SECONDARY) {
+                        game.rightClic(currentBox);
+                        imageSmiley1 = new Image ("./assets/NeutralSmiley.PNG");
+                        imgViewSmiley.setImage(imageSmiley1);
+                    }
+                    if (event.getButton() == MouseButton.PRIMARY) {
+                        if (currentBox.isFlag()) {
+                            game.leftClic(currentBox);
+                            imageSmiley1 = new Image ("./assets/NeutralSmiley.PNG");
+                            imgViewSmiley.setImage(imageSmiley1);
+                        } else if (currentBox.isTrapped()) {
+                            game.discover(colIndex, rowIndex);
+                            imageSmiley1 = new Image ("./assets/SadSmiley.PNG");
+                            imgViewSmiley.setImage(imageSmiley1);
+                        } else {
+                            game.discover(colIndex, rowIndex);
+                            imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
+                            imgViewSmiley.setImage(imageSmiley1);
                         }
                     }
                 });
            }
         }
         
-        game.addObserver( new Observer(){
-             @Override
-             public void update(Observable o, Object arg) {
-                int nbOfNeighborTrapped = 0;
-                Image image;
-                
-                for (Node node : gPane.getChildren()) {
-                    if(!(node instanceof ImageView)){
-                        continue;
-                    }                    
-                    int col = GridPane.getColumnIndex(node);
-                    int row = GridPane.getRowIndex(node);
-                    ImageView imgView = (ImageView)node;
-                    
-                    if(game.getBox(col,row).isFlag()){
-                        image = new Image("./assets/Flag.PNG");
-                        imgView.setImage(image);
-                    }
-                    
-                    if(!game.getBox(col,row).isFlag() && !game.getBox(col,row).isVisible()){
-                        image = new Image("./assets/HiddenBox.PNG");
-                        imgView.setImage(image);
-                    }
-                        
-                    if(game.getBox(col,row).isTrapped() && game.getBox(col, row).isVisible()){
-                        image = new Image("./assets/bomb.png");
-                        imgView.setImage(image);
-                        text.setText("Perdu !!");
-                        gPane.setDisable(true);
-                    } else {
-                        if(game.getBox(col, row).isVisible()) {
-                            nbOfNeighborTrapped = game.getBox(col, row).getNumberOfNeighborTrapped();
-                            switch (nbOfNeighborTrapped){
-                                case 0 :                                        
-                                    image = new Image("./assets/EmptyBox.PNG");
-                                    imgView.setImage(image);
-                                    break;
-                                case 1 :
-                                    image = new Image("./assets/One.PNG");
-                                    imgView.setImage(image);
-                                    break;
-                                case 2 :
-                                    image = new Image("./assets/Two.PNG");
-                                    imgView.setImage(image);
-                                    break;
-                                case 3 :
-                                    image = new Image("./assets/Three.PNG");
-                                    imgView.setImage(image);
-                                    break;
-                                case 4 :
-                                    image = new Image("./assets/Four.PNG");
-                                    imgView.setImage(image);
-                                    break;
-                                case 5 :
-                                    image = new Image("./assets/Five.PNG");
-                                    imgView.setImage(image);
-                                    break;
-                            }
+        game.addObserver( (Observable o, Object arg) -> {
+            int nbOfNeighborTrapped = 0;
+            Image image1;
+            Image imageSmiley1;
+            for (Node node : gPane.getChildren()) {
+                if(!(node instanceof ImageView)){
+                    continue;
+                }
+                int col = GridPane.getColumnIndex(node);
+                int row = GridPane.getRowIndex(node);
+                ImageView imgView = (ImageView)node;
+                if (game.getBox(col,row).isFlag()) {
+                    image1 = new Image("./assets/Flag.PNG");
+                    imgView.setImage(image1);
+                }
+                if (!game.getBox(col,row).isFlag() && !game.getBox(col,row).isVisible()) {
+                    image1 = new Image("./assets/HiddenBox.PNG");
+                    imgView.setImage(image1);
+                }
+                if (game.getBox(col,row).isTrapped() && game.getBox(col, row).isVisible()) {
+                    image1 = new Image("./assets/bomb.png");
+                    imgView.setImage(image1);
+                    text.setText("Perdu !!");
+                    gPane.setDisable(true);
+                } else {
+                    if (game.getBox(col, row).isVisible()) {
+                        nbOfNeighborTrapped = game.getBox(col, row).getNumberOfNeighborTrapped();
+                        switch (nbOfNeighborTrapped) {
+                            case 0:
+                                image1 = new Image("./assets/EmptyBox.PNG");
+                                imgView.setImage(image1);
+                                break;
+                            case 1:
+                                image1 = new Image("./assets/One.PNG");
+                                imgView.setImage(image1);
+                                break;
+                            case 2:
+                                image1 = new Image("./assets/Two.PNG");
+                                imgView.setImage(image1);
+                                break;
+                            case 3:
+                                image1 = new Image("./assets/Three.PNG");
+                                imgView.setImage(image1);
+                                break;
+                            case 4:
+                                image1 = new Image("./assets/Four.PNG");
+                                imgView.setImage(image1);
+                                break;
+                            case 5:
+                                image1 = new Image("./assets/Five.PNG");
+                                imgView.setImage(image1);
+                                break;
                         }
                     }
                 }
-                if((game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())){
-                    text.setText("Bravo, vous avez gagné !!");
-                    gPane.setDisable(true); 
-                }
+            }
+            if ((game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
+                text.setText("Bravo, vous avez gagné !!");
+                gPane.setDisable(true);
+                imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
+                imgViewSmiley.setImage(imageSmiley1);
             } 
         });
         
         gPane.setHgap(1);
         gPane.setVgap(1);
         
+        BorderPane topPane = new BorderPane();
+        topPane.setPadding(new Insets(20, 20, 10, 0));
+        
+        topPane.setCenter(imgViewSmiley);
+        
         BorderPane textPane = new BorderPane();
         textPane.setCenter(text);
         
+        rootPane.setTop(topPane);
         rootPane.setCenter(gPane);
         rootPane.setBottom(textPane);
-        primaryStage.setTitle("MineSweeperGame");
+        rootPane.setPadding(new Insets(0, 20, 20, 0));
+        primaryStage.setTitle("MineSweeperGame || By Mélanie DUBREUIL");
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

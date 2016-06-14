@@ -10,6 +10,7 @@ public class Board2D extends Board {
     private int nb_row_columns;
     private int nb_mine_trapped, nb_box_discovered, nb_flags;
     private final Box[][] board2D;
+    //private String 
     
     /* Constructor */
     public Board2D(int mine_trapped,int board_size) {
@@ -124,25 +125,25 @@ public class Board2D extends Board {
             this.setNb_box_discovered(nb_box_discovered+1);            
             if(!b.isTrapped()) {
                 if((b.getNumberOfNeighborTrapped() == 0)){
-                // Top box
-                if (posY-1>-1) {
-                    search(posX,posY-1);
-                }
-                // Left box
-                if (posX-1>-1) {
-                    search(posX-1,posY);
-                }
+                    // Top box
+                    if (posY-1>-1) {
+                        search(posX,posY-1);
+                    }
+                    // Left box
+                    if (posX-1>-1) {
+                        search(posX-1,posY);
+                    }
 
-                // Right box
-                if (posX+1<this.getNbRowColumns()) {
-                    search(posX+1,posY);
-                }
+                    // Right box
+                    if (posX+1<this.getNbRowColumns()) {
+                        search(posX+1,posY);
+                    }
 
-                // Bottom box
-                if (posY+1<this.getNbRowColumns()) {
-                    search(posX,posY+1);
-                }         
-            }
+                    // Bottom box
+                    if (posY+1<this.getNbRowColumns()) {
+                        search(posX,posY+1);
+                    }         
+                }
             }
         }
         
