@@ -1,19 +1,30 @@
 package minesweepergamereborn;
 
+
 import java.util.Observable;
-import java.util.Observer;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import static javafx.application.Application.launch;
+import static javafx.application.Application.launch;
+import static javafx.application.Application.launch;
+import static javafx.application.Application.launch;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -28,23 +39,110 @@ import model.Box;
 
 public class MineSweeperGameReborn extends Application {    
     Board2D game;
-    
+    BorderPane rootPane = new BorderPane();
+   
     @Override
-    public void start(Stage primaryStage) {      
-        BorderPane rootPane = new BorderPane();
-        Scene scene = new Scene(rootPane, 600, 800);        
-        game = new Board2D(20,10);
+    public void start(Stage primaryStage) {
+        BorderPane menuPane = new BorderPane();
+        GridPane gridMenuPane = new GridPane();
+        Scene menuScene = new Scene(menuPane, 600, 500);    
+        
+        Button btnEasy = new Button();
+        btnEasy.setText("EASY");
+        btnEasy.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                game = new Board2D(5,10);
+                launchGame(primaryStage);
+            }
+        });
+        
+        Button btnMedium = new Button();
+        btnMedium.setText("MEDIUM");
+        btnMedium.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                game = new Board2D(15,10);
+                launchGame(primaryStage);
+            }
+        });
+        
+        Button btnHard = new Button();
+        btnHard.setText("HARD");
+        btnHard.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                game = new Board2D(25,10);
+                launchGame(primaryStage);
+            }
+        });
+        
+        btnEasy.setMaxWidth(100);
+        btnMedium.setMaxWidth(100);
+        btnHard.setMaxWidth(100);
+        
+        BorderPane.setAlignment(btnEasy, Pos.CENTER);
+        BorderPane.setAlignment(btnMedium, Pos.CENTER);
+        BorderPane.setAlignment(btnHard, Pos.CENTER);
+
+        Text txtChooseDifficulty = new Text();
+        txtChooseDifficulty.setText("Choose your difficulty level :");
+        
+        gridMenuPane.add(txtChooseDifficulty,0,0);
+        gridMenuPane.add(btnEasy,0,1);
+        gridMenuPane.add(btnMedium,0,2);
+        gridMenuPane.add(btnHard,0,3);
+        
+        gridMenuPane.setHgap(10);
+        gridMenuPane.setVgap(12);
+        GridPane.setHalignment(btnEasy, HPos.CENTER);
+        GridPane.setHalignment(btnMedium, HPos.CENTER);
+        GridPane.setHalignment(btnHard, HPos.CENTER);
+        
+        Image imgLogo = new Image("./assets/GameLogo.png");
+        ImageView imgViewLogo = new ImageView(imgLogo);
+        BorderPane.setAlignment(imgViewLogo, Pos.CENTER);
+        
+        Text txtCredits = new Text();
+        txtCredits.setText("By Mélanie DUBREUIL, 3APP");
+        BorderPane.setAlignment(txtCredits, Pos.CENTER);
+        
+        gridMenuPane.setAlignment(Pos.CENTER);
+        menuPane.setTop(imgViewLogo);
+        menuPane.setCenter(gridMenuPane);
+        
+       
+        menuPane.setBottom(txtCredits);
+        
+        primaryStage.setTitle("MineSweeperGame || By Mélanie DUBREUIL");
+        primaryStage.setResizable(false);
+        primaryStage.setScene(menuScene);
+        primaryStage.show();
+    }
+    
+    public void launchGame(Stage primaryStage){
+        Scene scene = new Scene(rootPane, 600, 850); 
+        primaryStage.setScene(scene);
         game.generateBoard();
         
-        Text text = new Text();
-        text.setFont(new Font(20));
-        text.setText("Welcome in the mineSweeperGame !");
+        Image imgLogo = new Image("./assets/GameLogo.png");
+        ImageView imgViewLogo = new ImageView(imgLogo);
+        BorderPane.setAlignment(imgViewLogo, Pos.CENTER);
         
         Image imageSmiley = new Image("./assets/NeutralSmiley.PNG");
         ImageView imgViewSmiley = new ImageView(imageSmiley);
         
         GridPane gPane = new GridPane();
-        gPane.setPadding(new Insets(50));       
+        gPane.setPadding(new Insets(50));
+        gPane.setHgap(1);
+        gPane.setVgap(1);
+        
+        BorderPane topPane = new BorderPane();
+        topPane.setPadding(new Insets(20, 20, 10, 0));
+        
+        topPane.setCenter(imgViewSmiley);
+        
+        BorderPane textPane = new BorderPane();
         
         
         // Board init
@@ -86,6 +184,7 @@ public class MineSweeperGameReborn extends Application {
         }
         
         game.addObserver( (Observable o, Object arg) -> {
+            
             int nbOfNeighborTrapped = 0;
             Image image1;
             Image imageSmiley1;
@@ -107,7 +206,6 @@ public class MineSweeperGameReborn extends Application {
                 if (game.getBox(col,row).isTrapped() && game.getBox(col, row).isVisible()) {
                     image1 = new Image("./assets/bomb.png");
                     imgView.setImage(image1);
-                    text.setText("Perdu !!");
                     gPane.setDisable(true);
                 } else {
                     if (game.getBox(col, row).isVisible()) {
@@ -142,32 +240,15 @@ public class MineSweeperGameReborn extends Application {
                 }
             }
             if ((game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
-                text.setText("Bravo, vous avez gagné !!");
                 gPane.setDisable(true);
                 imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
                 imgViewSmiley.setImage(imageSmiley1);
             } 
         });
         
-        gPane.setHgap(1);
-        gPane.setVgap(1);
-        
-        BorderPane topPane = new BorderPane();
-        topPane.setPadding(new Insets(20, 20, 10, 0));
-        
-        topPane.setCenter(imgViewSmiley);
-        
-        BorderPane textPane = new BorderPane();
-        textPane.setCenter(text);
-        
         rootPane.setTop(topPane);
         rootPane.setCenter(gPane);
-        rootPane.setBottom(textPane);
-        rootPane.setPadding(new Insets(0, 20, 20, 0));
-        primaryStage.setTitle("MineSweeperGame || By Mélanie DUBREUIL");
-        primaryStage.setResizable(false);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        rootPane.setBottom(imgViewLogo);
     }
 
     /**

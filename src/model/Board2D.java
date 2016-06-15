@@ -10,7 +10,6 @@ public class Board2D extends Board {
     private int nb_row_columns;
     private int nb_mine_trapped, nb_box_discovered, nb_flags;
     private final Box[][] board2D;
-    //private String 
     
     /* Constructor */
     public Board2D(int mine_trapped,int board_size) {
