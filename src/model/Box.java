@@ -8,16 +8,9 @@ import java.util.Observable;
  */
 
 public class Box extends Observable{
-    private boolean flag;
-    private boolean trapped;
-    private boolean visible;
+    private boolean flag, trapped, visible;
     private int numberOfNeighborTrapped;
     
-    // Simple constructor
-    public Box() {
-    }
-    
-    // Full constructor
     public Box(boolean containsFlag, boolean isTrapped, boolean isVisible, int numberOfNeighborTrapped) {
         this.flag = containsFlag;
         this.trapped = isTrapped;
@@ -25,7 +18,7 @@ public class Box extends Observable{
         this.numberOfNeighborTrapped = numberOfNeighborTrapped;
     }
     
-    // Getters and setters
+    // Getters & setters
     public boolean isFlag() {
         return flag;
     }
@@ -57,23 +50,4 @@ public class Box extends Observable{
     public void setNumberOfNeighborTrapped(int numberOfNeighborTrapped) {
         this.numberOfNeighborTrapped = numberOfNeighborTrapped;
     }
-    
-    public void updateBox(){
-        // TODO
-        this.setVisible(true);
-    }
-    
-    public void clic() {
-        updateBox();
-        
-//        ArrayList<> al = ;
-//	for(int i = 0; i < al.size(); i++) {
-//            ArrayList<Box> b = Board.getNeighbors(this)
-//            al<1>.maj();
-//	}
-//	notifyObservers();
-    }
-    
-    
-    
 }

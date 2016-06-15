@@ -6,12 +6,10 @@ package model;
  * 
  */
 
-public class Board2D extends Board {    
-    private int nb_row_columns;
-    private int nb_mine_trapped, nb_box_discovered, nb_flags;
+public class Board2D extends Board {
+    private int nb_row_columns, nb_mine_trapped, nb_box_discovered, nb_flags;
     private final Box[][] board2D;
     
-    /* Constructor */
     public Board2D(int mine_trapped,int board_size) {
         this.nb_mine_trapped = mine_trapped;
         this.nb_row_columns = board_size;
@@ -36,6 +34,10 @@ public class Board2D extends Board {
         return nb_flags;
     }
     
+    public int getNb_box_discovered() {
+        return nb_box_discovered;
+    }
+    
     /* Setters */
     public void setNbRowColumns(int nb) {
         this.nb_row_columns = nb;
@@ -43,10 +45,6 @@ public class Board2D extends Board {
 
     public void setNbMineTrapped(int nb) {
         this.nb_mine_trapped = nb;
-    }
-
-    public int getNb_box_discovered() {
-        return nb_box_discovered;
     }
 
     public void setNb_box_discovered(int nb_box_discovered) {
@@ -57,17 +55,10 @@ public class Board2D extends Board {
         this.nb_flags = nb_flags;
     }
     
-    
-    /*
-    * public void generateBoard
-    * @return 
-    * Generates board's game
-    */
     @Override
     public void generateBoard(){
-        
+        // We first generate mines trapped
         generateMineTrapped();
-        
         // Since we already filled some boxes with trapped mine, we just have to fill the rest of the board
         for (int i = 0; i < this.nb_row_columns; i++){
             for (int j = 0 ; j < this.nb_row_columns; j++){
@@ -77,9 +68,11 @@ public class Board2D extends Board {
                 }
             }
         }
+        // We finally update number of neighbors trapped for each box
         addNumbersOfMinesTrapped();
     }
     
+    @Override
     public void addNumbersOfMinesTrapped(){        
         for (int i = 0; i < this.nb_row_columns; i++){
             for (int j = 0 ; j < this.nb_row_columns; j++){
@@ -93,26 +86,29 @@ public class Board2D extends Board {
         }
     }
     
-    /*
-    * public int[][] generatePositionMineTrapped()
-    * @return 
-    * Initialize board's game with randomly created mines
-    */
     @Override
-    public void generateMineTrapped() {   
-        
+    public void generateMineTrapped() {
         for (int i=0; i<this.nb_mine_trapped;i++){
-            
             int random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             int random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
-            // we check if there's no mine already : if this is the case, we have to generate new indexes
+            
+            // We check if there's no mine already : if this is the case, we have to generate new indexes
             while(this.board2D[random_row][random_column] != null){
                 random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
                 random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             }
+            
             Box b = new Box(false,true,false,0);
             this.board2D[random_row][random_column] = b;
         }
+    }
+    
+    @Override
+    public void discover(int posX, int posY ){
+        Box b = this.board2D[posX][posY];
+        search(posX,posY);
+        setChanged();
+        notifyObservers();
     }
     
     @Override
@@ -124,39 +120,29 @@ public class Board2D extends Board {
             this.setNb_box_discovered(nb_box_discovered+1);            
             if(!b.isTrapped()) {
                 if((b.getNumberOfNeighborTrapped() == 0)){
+                    
                     // Top box
                     if (posY-1>-1) {
                         search(posX,posY-1);
                     }
+                    
                     // Left box
                     if (posX-1>-1) {
                         search(posX-1,posY);
                     }
-
+                    
                     // Right box
                     if (posX+1<this.getNbRowColumns()) {
                         search(posX+1,posY);
                     }
-
+                    
                     // Bottom box
                     if (posY+1<this.getNbRowColumns()) {
                         search(posX,posY+1);
                     }         
                 }
             }
-        }
-        
-        
-    }
-    
-    
-    @Override
-    public void discover(int posX, int posY ){
-        Box b = this.board2D[posX][posY]; 
-        
-        search(posX,posY);
-        setChanged();
-        notifyObservers();
+        } 
     }
     
     @Override
