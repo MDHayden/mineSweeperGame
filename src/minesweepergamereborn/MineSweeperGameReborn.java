@@ -8,6 +8,7 @@ import static javafx.application.Application.launch;
 import static javafx.application.Application.launch;
 import static javafx.application.Application.launch;
 import static javafx.application.Application.launch;
+import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -23,6 +24,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -121,7 +123,8 @@ public class MineSweeperGameReborn extends Application {
     }
     
     public void launchGame(Stage primaryStage){
-        Scene scene = new Scene(rootPane, 600, 850); 
+        Scene scene = new Scene(rootPane, 600, 850);
+        StackPane sPane = new StackPane();
         primaryStage.setScene(scene);
         game.generateBoard();
         
@@ -132,10 +135,15 @@ public class MineSweeperGameReborn extends Application {
         Image imageSmiley = new Image("./assets/NeutralSmiley.PNG");
         ImageView imgViewSmiley = new ImageView(imageSmiley);
         
+        Text endOfGame = new Text("");
+        
         GridPane gPane = new GridPane();
         gPane.setPadding(new Insets(50));
         gPane.setHgap(1);
         gPane.setVgap(1);
+        
+        
+        
         
         BorderPane topPane = new BorderPane();
         topPane.setPadding(new Insets(20, 20, 10, 0));
@@ -206,6 +214,7 @@ public class MineSweeperGameReborn extends Application {
                 if (game.getBox(col,row).isTrapped() && game.getBox(col, row).isVisible()) {
                     image1 = new Image("./assets/bomb.png");
                     imgView.setImage(image1);
+                    endOfGame.setText("Perdu");
                     gPane.setDisable(true);
                 } else {
                     if (game.getBox(col, row).isVisible()) {
@@ -242,12 +251,16 @@ public class MineSweeperGameReborn extends Application {
             if ((game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
                 gPane.setDisable(true);
                 imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
+                endOfGame.setText("Gagné");
                 imgViewSmiley.setImage(imageSmiley1);
             } 
         });
         
+        sPane.getChildren().add(gPane);
+        sPane.getChildren().add(endOfGame);
+        
         rootPane.setTop(topPane);
-        rootPane.setCenter(gPane);
+        rootPane.setCenter(sPane);
         rootPane.setBottom(imgViewLogo);
     }
 
