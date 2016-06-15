@@ -21,7 +21,7 @@ FEATURES
 *********************************************************************************************************************************************
 SOON
 - Improve discovery algorithm to make it work faster | DONE
-- Clean code
+- Clean code | DONE
 - Add differents levels of difficulty | DONE
 - Add a score
 - Add differents sizes to the board
