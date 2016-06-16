@@ -18,6 +18,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Board2D;
@@ -37,7 +39,7 @@ public class MineSweeperGameReborn extends Application {
     public void start(Stage primaryStage) {
         BorderPane menuPane = new BorderPane();
         GridPane gridMenuPane = new GridPane();
-        Scene menuScene = new Scene(menuPane, 600, 500);    
+        Scene menuScene = new Scene(menuPane, 600, 500);
         
         Button btnEasy = new Button();
         btnEasy.setText("EASY");
@@ -69,15 +71,19 @@ public class MineSweeperGameReborn extends Application {
             }
         });
         
-        btnEasy.setMaxWidth(100);
-        btnMedium.setMaxWidth(100);
-        btnHard.setMaxWidth(100);
+        btnEasy.setMaxWidth(200);
+        btnEasy.setFont(Font.loadFont(MineSweeperGameReborn.class.getResourceAsStream("GameCube.ttf"), 20));
+        btnMedium.setMaxWidth(200);
+        btnMedium.setFont(Font.loadFont(MineSweeperGameReborn.class.getResourceAsStream("GameCube.ttf"), 20));
+        btnHard.setMaxWidth(200);
+        btnHard.setFont(Font.loadFont(MineSweeperGameReborn.class.getResourceAsStream("GameCube.ttf"), 20));
         
         BorderPane.setAlignment(btnEasy, Pos.CENTER);
         BorderPane.setAlignment(btnMedium, Pos.CENTER);
         BorderPane.setAlignment(btnHard, Pos.CENTER);
 
         Text txtChooseDifficulty = new Text();
+        txtChooseDifficulty.setFont(Font.loadFont(MineSweeperGameReborn.class.getResourceAsStream("GameCube.ttf"), 20));
         txtChooseDifficulty.setText("Choose your difficulty level :");
         
         gridMenuPane.add(txtChooseDifficulty,0,0);
@@ -95,18 +101,14 @@ public class MineSweeperGameReborn extends Application {
         ImageView imgViewLogo = new ImageView(imgLogo);
         BorderPane.setAlignment(imgViewLogo, Pos.CENTER);
         
-        Text txtCredits = new Text();
-        txtCredits.setText("By Mélanie DUBREUIL, 3APP");
-        BorderPane.setAlignment(txtCredits, Pos.CENTER);
-        
         gridMenuPane.setAlignment(Pos.CENTER);
         menuPane.setTop(imgViewLogo);
         menuPane.setCenter(gridMenuPane);
-        
-       
-        menuPane.setBottom(txtCredits);
-        
+                
         primaryStage.setTitle("MineSweeperGame || By Mélanie DUBREUIL");
+        primaryStage.getIcons().add(new Image("./assets/bomb.png"));
+        primaryStage.setX(600);
+        primaryStage.setY(50);
         primaryStage.setResizable(false);
         primaryStage.setScene(menuScene);
         primaryStage.show();
@@ -118,7 +120,7 @@ public class MineSweeperGameReborn extends Application {
      * Generates second window which is the game
      */
     public void launchGame(Stage primaryStage){
-        Scene scene = new Scene(rootPane, 600, 850);
+        Scene scene = new Scene(rootPane, 600, 700);
         primaryStage.setScene(scene);
         game.generateBoard();
         
@@ -135,6 +137,8 @@ public class MineSweeperGameReborn extends Application {
         gPane.setHgap(1);
         gPane.setVgap(1);
         Text endOfGame = new Text("");
+        endOfGame.setFont(Font.loadFont(MineSweeperGameReborn.class.getResourceAsStream("GameCube.ttf"), 60));
+        BorderPane.setAlignment(endOfGame, Pos.CENTER);
         BorderPane textPane = new BorderPane();
         
         // Board initiation
@@ -205,7 +209,8 @@ public class MineSweeperGameReborn extends Application {
                 if (game.getBox(col,row).isTrapped() && game.getBox(col, row).isVisible()) {
                     image1 = new Image("./assets/bomb.png");
                     imgView.setImage(image1);
-                    endOfGame.setText("Perdu");
+                    endOfGame.setFill(Color.RED);
+                    endOfGame.setText("GAME OVER");
                     gPane.setDisable(true);
                 } else {
                     if (game.getBox(col, row).isVisible()) {
@@ -256,21 +261,16 @@ public class MineSweeperGameReborn extends Application {
             if ((game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
                 gPane.setDisable(true);
                 imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
-                endOfGame.setText("You won !");
+                endOfGame.setFill(Color.GREEN);
+                endOfGame.setText("YOU WON");
                 imgViewSmiley.setImage(imageSmiley1);
             } 
         });
         sPaneCenter.getChildren().add(gPane);
         sPaneCenter.getChildren().add(endOfGame);
         
-        // BOTTOM
-        Image imgLogo = new Image("./assets/GameLogo.png");
-        ImageView imgViewBottom = new ImageView(imgLogo);
-        BorderPane.setAlignment(imgViewBottom, Pos.CENTER);
-        
         rootPane.setTop(borderPaneTop);
         rootPane.setCenter(sPaneCenter);
-        rootPane.setBottom(imgViewBottom);
     }
 
     /**
