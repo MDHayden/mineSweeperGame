@@ -1,6 +1,8 @@
 package minesweepergamereborn;
 
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
@@ -152,9 +154,9 @@ public class MineSweeperGameReborn extends Application {
                 game.getBox(i, j).addObserver((Observable o, Object arg) -> {
                     int nbOfNeighborTrapped = 0;
                     Image image1, imageSmiley1;
+                    boolean trapped = false;
                     
-                    for (Node node : gPane.getChildren()) {
-                        
+                    for (Node node : gPane.getChildren()) {                        
                         // we check that the node is an imageView : if not we don't want to apply a treatment on the box
                         if(!(node instanceof ImageView)){
                             continue;
@@ -178,6 +180,7 @@ public class MineSweeperGameReborn extends Application {
 
                         // Case : the box is a mine
                         if (game.getBox(col,row).isTrapped() && game.getBox(col, row).isVisible()) {
+                            trapped = true;
                             image1 = new Image("./assets/bomb.png");
                             caseView.setImage(image1);
                             endOfGame.setFill(Color.RED);
@@ -229,13 +232,13 @@ public class MineSweeperGameReborn extends Application {
                     }
                     
                     // Case : player won the game
-                    if ((game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
+                    if (!trapped && (game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
                         gPane.setDisable(true);
                         imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
                         endOfGame.setFill(Color.GREEN);
                         endOfGame.setText("YOU WON");
                         imgViewSmiley.setImage(imageSmiley1);
-                    } 
+                    }
                 });
                 
                 imgView.setOnMouseClicked((MouseEvent event) -> {

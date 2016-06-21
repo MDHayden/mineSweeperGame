@@ -68,7 +68,7 @@ public class Box extends Observable{
     public void updateBox(Box b){        
         if(!b.isFlag() && !b.isVisible()) {
             b.setVisible(true);
-            this.getGame().setNb_box_discovered(this.getGame().getNb_box_discovered()+1);            
+            this.getGame().setNb_box_discovered(this.getGame().getNb_box_discovered()+1);
             if(!b.isTrapped() && (b.getNumberOfNeighborTrapped() == 0)) {
                 ArrayList<Box> neighbors = b.getGame().giveNeighbors(b);
                 for (Box n : neighbors) {
