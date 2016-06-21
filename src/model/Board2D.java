@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  *
  * @author Mélanie DUBREUIL 3APP
@@ -7,22 +10,20 @@ package model;
  */
 
 public class Board2D extends Board {
-    private int nb_row_columns, nb_mine_trapped, nb_box_discovered, nb_flags;
+    private int nb_row_columns;
     private final Box[][] board2D;
+    private HashMap<Box, int[]> boxPosition;
     
     public Board2D(int mine_trapped,int board_size) {
-        this.nb_mine_trapped = mine_trapped;
+        super(mine_trapped);
         this.nb_row_columns = board_size;
         this.board2D = new Box[nb_row_columns][nb_row_columns];
+        this.boxPosition = new HashMap<>();
     }
     
     /* Getters */
     public int getNbRowColumns() {
         return nb_row_columns;
-    }
-
-    public int getNbMineTrapped() {
-        return nb_mine_trapped;
     }
     
     public Box getBox(int i, int j) {
@@ -30,12 +31,8 @@ public class Board2D extends Board {
         return b;
     }
 
-    public int getNb_flags() {
-        return nb_flags;
-    }
-    
-    public int getNb_box_discovered() {
-        return nb_box_discovered;
+    public HashMap<Box, int[]> getBoxPosition() {
+        return boxPosition;
     }
     
     /* Setters */
@@ -43,16 +40,8 @@ public class Board2D extends Board {
         this.nb_row_columns = nb;
     }
 
-    public void setNbMineTrapped(int nb) {
-        this.nb_mine_trapped = nb;
-    }
-
-    public void setNb_box_discovered(int nb_box_discovered) {
-        this.nb_box_discovered = nb_box_discovered;
-    }
-
-    public void setNb_flags(int nb_flags) {
-        this.nb_flags = nb_flags;
+    public void setBoxPosition(HashMap<Box, int[]> boxPosition) {
+        this.boxPosition = boxPosition;
     }
     
     @Override
@@ -63,32 +52,21 @@ public class Board2D extends Board {
         for (int i = 0; i < this.nb_row_columns; i++){
             for (int j = 0 ; j < this.nb_row_columns; j++){
                 if (this.board2D[i][j] == null){  
-                    Box b = new Box(false,false,false,0);
+                    Box b = new Box(false,false,false,0,this);
                     this.board2D[i][j] = b;
+                    int[] position = new int[2];
+                    position[0] = i; position [1] = j;
+                    this.boxPosition.put(b, position);
                 }
             }
         }
         // We finally update number of neighbors trapped for each box
-        addNumbersOfMinesTrapped();
-    }
-    
-    @Override
-    public void addNumbersOfMinesTrapped(){        
-        for (int i = 0; i < this.nb_row_columns; i++){
-            for (int j = 0 ; j < this.nb_row_columns; j++){
-                if (!this.board2D[i][j].isTrapped()){
-                    // We have to check if the box is surronded by trapped box
-                    // We will update numbers of mine trapped
-                    int nbMinesTrapped = findNumberOfMinesTrapped(i,j);
-                    this.board2D[i][j].setNumberOfNeighborTrapped(nbMinesTrapped);
-                }
-            }
-        }
+        addNumberMineTrapped();
     }
     
     @Override
     public void generateMineTrapped() {
-        for (int i=0; i<this.nb_mine_trapped;i++){
+        for (int i=0; i<this.getNbMineTrapped();i++){
             int random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             int random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             
@@ -98,148 +76,71 @@ public class Board2D extends Board {
                 random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             }
             
-            Box b = new Box(false,true,false,0);
+            Box b = new Box(false,true,false,0,this);
             this.board2D[random_row][random_column] = b;
+            int[] position = new int[2];
+            position[0] = random_row; position [1] = random_column;
+            this.boxPosition.put(b, position);
         }
     }
     
     @Override
-    public void discover(int posX, int posY ){
-        Box b = this.board2D[posX][posY];
-        search(posX,posY);
-        setChanged();
-        notifyObservers();
-    }
-    
-    @Override
-    public void search(int posX, int posY){
-        Box b = this.board2D[posX][posY];
-        
-        if(!b.isFlag() && !b.isVisible()) {
-            b.setVisible(true);
-            this.setNb_box_discovered(nb_box_discovered+1);            
-            if(!b.isTrapped()) {
-                if((b.getNumberOfNeighborTrapped() == 0)){
-                    
-                    // Top box
-                    if (posY-1>-1) {
-                        search(posX,posY-1);
-                    }
-                    
-                    // Corner Top left
-                    if (posY-1>-1 && posX-1>-1) {
-                        search(posX-1,posY-1);
-                    }
-                    
-                    // Corner Top right
-                    if (posY-1>-1 && posX+1<this.getNbRowColumns()) {
-                        search(posX+1,posY-1);
-                    }
-                    
-                    // Left box
-                    if (posX-1>-1) {
-                        search(posX-1,posY);
-                    }
-                    
-                    // Right box
-                    if (posX+1<this.getNbRowColumns()) {
-                        search(posX+1,posY);
-                    }
-                    
-                    // Bottom box
-                    if (posY+1<this.getNbRowColumns()) {
-                        search(posX,posY+1);
-                    }
-                    
-                    // Corner bottom left
-                    if (posX-1>-1 && posY+1<this.getNbRowColumns()) {
-                        search(posX-1,posY+1);
-                    }
-                    
-                    // Corner bottom right
-                    if (posY+1<this.getNbRowColumns() && posX+1<this.getNbRowColumns()) {
-                        search(posX+1,posY+1);
-                    }
+    public void addNumberMineTrapped(){
+        for (int i = 0; i < this.nb_row_columns; i++){
+            for (int j = 0 ; j < this.nb_row_columns; j++){
+                Box b = this.board2D[i][j];
+                if (!b.isTrapped()){
+                    b.findNumberOfMinesTrapped();
                 }
             }
-        } 
+        }
     }
     
     @Override
-    public int findNumberOfMinesTrapped(int posX, int posY){
-       int numberOfMinesTrapped=0;
-       
-       // Right-top corner box
+    public ArrayList<Box> giveNeighbors(Box b){
+        ArrayList<Box> neighborList = new ArrayList<>();
+        int[] position = this.getBoxPosition().get(b);
+        int posX = position[0], posY = position[1];
+        
+        // Right-top corner box
        if (posX-1>-1 && posY-1>-1) {
-           if(board2D[posX-1][posY-1].isTrapped()){
-                numberOfMinesTrapped++;
-            }
+           neighborList.add(this.board2D[posX-1][posY-1]);
        }
        
        // Top box
        if (posY-1>-1) {
-           if(board2D[posX][posY-1].isTrapped()){
-                numberOfMinesTrapped++;
-            }
+           neighborList.add(this.board2D[posX][posY-1]);
        }
        
        // Left-top corner box
        if (posY-1>-1 && posX+1<this.getNbRowColumns()) {
-           if(board2D[posX+1][posY-1].isTrapped()){
-                numberOfMinesTrapped++;
-            }
+           neighborList.add(this.board2D[posX+1][posY-1]);
        }
        
        // Left box
        if (posX-1>-1) {
-           if(board2D[posX-1][posY].isTrapped()){
-                numberOfMinesTrapped++;
-            }
+           neighborList.add(this.board2D[posX-1][posY]);
        }
        
        // Right box
        if (posX+1<this.getNbRowColumns()) {
-           if(board2D[posX+1][posY].isTrapped()){
-                numberOfMinesTrapped++;
-            }
+           neighborList.add(this.board2D[posX+1][posY]);
        }
        
        // Right-bottom corner box
        if (posY+1<this.getNbRowColumns() && posX+1<this.getNbRowColumns()) {
-           if(board2D[posX+1][posY+1].isTrapped()){
-                numberOfMinesTrapped++;
-            }
+           neighborList.add(this.board2D[posX+1][posY+1]);
        }
        
        // Bottom box
        if (posY+1<this.getNbRowColumns()) {
-           if(board2D[posX][posY+1].isTrapped()){
-                numberOfMinesTrapped++;
-            }
+           neighborList.add(this.board2D[posX][posY+1]);
        }
        
        // Left-bottom corner box
        if (posX-1>-1 && posY+1<this.getNbRowColumns()) {
-           if(board2D[posX-1][posY+1].isTrapped()){
-                numberOfMinesTrapped++;
-            }
+           neighborList.add(this.board2D[posX-1][posY+1]);
        }
-       return numberOfMinesTrapped;
-    }
-    
-    @Override
-    public void rightClic(Box b){
-        b.setFlag(true);
-        this.setNb_flags(nb_flags+1);
-        setChanged();
-        notifyObservers();
-    }
-    
-    @Override
-    public void leftClic(Box b){
-        b.setFlag(false);
-        this.setNb_flags(nb_flags-1);
-        setChanged();
-        notifyObservers();
+        return neighborList;
     }
 }
