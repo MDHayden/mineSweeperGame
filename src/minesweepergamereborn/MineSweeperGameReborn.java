@@ -233,7 +233,7 @@ public class MineSweeperGameReborn extends Application {
                                 imgView.setImage(image1);
                                 break;
                             case 4:
-                                image1 = new Image("./assets/Four.PNG");
+                                image1 = new Image("./assets/Four.jpg");
                                 imgView.setImage(image1);
                                 break;
                             case 5:

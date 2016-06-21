@@ -126,6 +126,16 @@ public class Board2D extends Board {
                         search(posX,posY-1);
                     }
                     
+                    // Corner Top left
+                    if (posY-1>-1 && posX-1>-1) {
+                        search(posX-1,posY-1);
+                    }
+                    
+                    // Corner Top right
+                    if (posY-1>-1 && posX+1<this.getNbRowColumns()) {
+                        search(posX+1,posY-1);
+                    }
+                    
                     // Left box
                     if (posX-1>-1) {
                         search(posX-1,posY);
@@ -139,7 +149,17 @@ public class Board2D extends Board {
                     // Bottom box
                     if (posY+1<this.getNbRowColumns()) {
                         search(posX,posY+1);
-                    }         
+                    }
+                    
+                    // Corner bottom left
+                    if (posX-1>-1 && posY+1<this.getNbRowColumns()) {
+                        search(posX-1,posY+1);
+                    }
+                    
+                    // Corner bottom right
+                    if (posY+1<this.getNbRowColumns() && posX+1<this.getNbRowColumns()) {
+                        search(posX+1,posY+1);
+                    }
                 }
             }
         } 
