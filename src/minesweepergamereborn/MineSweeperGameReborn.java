@@ -149,28 +149,118 @@ public class MineSweeperGameReborn extends Application {
                 imgView.setImage(image);
                 gPane.add(imgView,i,j);
                 
+                game.getBox(i, j).addObserver((Observable o, Object arg) -> {
+                    int nbOfNeighborTrapped = 0;
+                    Image image1, imageSmiley1;
+                    
+                    for (Node node : gPane.getChildren()) {
+                        
+                        // we check that the node is an imageView : if not we don't want to apply a treatment on the box
+                        if(!(node instanceof ImageView)){
+                            continue;
+                        }
+                        
+                        int col = GridPane.getColumnIndex(node);
+                        int row = GridPane.getRowIndex(node);
+                        ImageView caseView = (ImageView)node;
+
+                        // Case : the box is a flag
+                        if (game.getBox(col,row).isFlag()) {
+                            image1 = new Image("./assets/Flag.PNG");
+                            caseView.setImage(image1);
+                        }
+
+                        // Case : the box is hidden
+                        if (!game.getBox(col,row).isFlag() && !game.getBox(col,row).isVisible()) {
+                            image1 = new Image("./assets/HiddenBox.PNG");
+                            caseView.setImage(image1);
+                        }
+
+                        // Case : the box is a mine
+                        if (game.getBox(col,row).isTrapped() && game.getBox(col, row).isVisible()) {
+                            image1 = new Image("./assets/bomb.png");
+                            caseView.setImage(image1);
+                            endOfGame.setFill(Color.RED);
+                            endOfGame.setText("GAME OVER");
+                            gPane.setDisable(true);
+                        } else {
+                            if (game.getBox(col, row).isVisible()) {
+                                nbOfNeighborTrapped = game.getBox(col, row).getNumberOfNeighborTrapped();
+                                switch (nbOfNeighborTrapped) {
+                                    case 0:
+                                        image1 = new Image("./assets/EmptyBox.PNG");
+                                        caseView.setImage(image1);
+                                        break;
+                                    case 1:
+                                        image1 = new Image("./assets/One.PNG");
+                                        caseView.setImage(image1);
+                                        break;
+                                    case 2:
+                                        image1 = new Image("./assets/Two.PNG");
+                                        caseView.setImage(image1);
+                                        break;
+                                    case 3:
+                                        image1 = new Image("./assets/Three.PNG");
+                                        caseView.setImage(image1);
+                                        break;
+                                    case 4:
+                                        image1 = new Image("./assets/Four.jpg");
+                                        caseView.setImage(image1);
+                                        break;
+                                    case 5:
+                                        image1 = new Image("./assets/Five.PNG");
+                                        caseView.setImage(image1);
+                                        break;
+                                    case 6:
+                                        image1 = new Image("./assets/Six.PNG");
+                                        caseView.setImage(image1);
+                                        break;
+                                    case 7:
+                                        image1 = new Image("./assets/Seven.PNG");
+                                        caseView.setImage(image1);
+                                        break;
+                                    case 8:
+                                        image1 = new Image("./assets/Eight.PNG");
+                                        caseView.setImage(image1);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Case : player won the game
+                    if ((game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
+                        gPane.setDisable(true);
+                        imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
+                        endOfGame.setFill(Color.GREEN);
+                        endOfGame.setText("YOU WON");
+                        imgViewSmiley.setImage(imageSmiley1);
+                    } 
+                });
+                
                 imgView.setOnMouseClicked((MouseEvent event) -> {
                     Node source = (Node)event.getSource() ;
                     Integer colIndex = GridPane.getColumnIndex(source);
                     Integer rowIndex = GridPane.getRowIndex(source);
                     Box currentBox = game.getBox(colIndex, rowIndex);
                     Image imageSmiley1;
+                    
                     if (event.getButton() == MouseButton.SECONDARY) {
-                        game.rightClic(currentBox);
+                        currentBox.rightClic();
                         imageSmiley1 = new Image ("./assets/NeutralSmiley.PNG");
                         imgViewSmiley.setImage(imageSmiley1);
                     }
-                    if (event.getButton() == MouseButton.PRIMARY) {
+                    if (event.getButton() == MouseButton.PRIMARY){
                         if (currentBox.isFlag()) {
-                            game.leftClic(currentBox);
+                            currentBox.leftClic();
                             imageSmiley1 = new Image ("./assets/NeutralSmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);
                         } else if (currentBox.isTrapped()) {
-                            game.discover(colIndex, rowIndex);
+                            game.getBox(colIndex, rowIndex).discover(currentBox);
                             imageSmiley1 = new Image ("./assets/SadSmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);
                         } else {
-                            game.discover(colIndex, rowIndex);
+                            game.getBox(colIndex, rowIndex).discover(currentBox);
                             imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);
                         }
@@ -178,94 +268,6 @@ public class MineSweeperGameReborn extends Application {
                 });
             }
         }
-        
-        game.addObserver( (Observable o, Object arg) -> {
-            int nbOfNeighborTrapped = 0;
-            Image image1, imageSmiley1;
-            
-            for (Node node : gPane.getChildren()) {
-                // we check that the node is an imageView : if not we don't want to apply a treatment on the box
-                if(!(node instanceof ImageView)){
-                    continue;
-                }
-                
-                int col = GridPane.getColumnIndex(node);
-                int row = GridPane.getRowIndex(node);
-                ImageView imgView = (ImageView)node;
-                
-                // Case : the box is a flag
-                if (game.getBox(col,row).isFlag()) {
-                    image1 = new Image("./assets/Flag.PNG");
-                    imgView.setImage(image1);
-                }
-                
-                // Case : the box is hidden
-                if (!game.getBox(col,row).isFlag() && !game.getBox(col,row).isVisible()) {
-                    image1 = new Image("./assets/HiddenBox.PNG");
-                    imgView.setImage(image1);
-                }
-                
-                // Case : the box is a mine
-                if (game.getBox(col,row).isTrapped() && game.getBox(col, row).isVisible()) {
-                    image1 = new Image("./assets/bomb.png");
-                    imgView.setImage(image1);
-                    endOfGame.setFill(Color.RED);
-                    endOfGame.setText("GAME OVER");
-                    gPane.setDisable(true);
-                } else {
-                    if (game.getBox(col, row).isVisible()) {
-                        nbOfNeighborTrapped = game.getBox(col, row).getNumberOfNeighborTrapped();
-                        switch (nbOfNeighborTrapped) {
-                            case 0:
-                                image1 = new Image("./assets/EmptyBox.PNG");
-                                imgView.setImage(image1);
-                                break;
-                            case 1:
-                                image1 = new Image("./assets/One.PNG");
-                                imgView.setImage(image1);
-                                break;
-                            case 2:
-                                image1 = new Image("./assets/Two.PNG");
-                                imgView.setImage(image1);
-                                break;
-                            case 3:
-                                image1 = new Image("./assets/Three.PNG");
-                                imgView.setImage(image1);
-                                break;
-                            case 4:
-                                image1 = new Image("./assets/Four.jpg");
-                                imgView.setImage(image1);
-                                break;
-                            case 5:
-                                image1 = new Image("./assets/Five.PNG");
-                                imgView.setImage(image1);
-                                break;
-                            case 6:
-                                image1 = new Image("./assets/Six.PNG");
-                                imgView.setImage(image1);
-                                break;
-                            case 7:
-                                image1 = new Image("./assets/Seven.PNG");
-                                imgView.setImage(image1);
-                                break;
-                            case 8:
-                                image1 = new Image("./assets/Eight.PNG");
-                                imgView.setImage(image1);
-                                break;
-                        }
-                    }
-                }
-            }
-            
-            // Case : player won the game
-            if ((game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
-                gPane.setDisable(true);
-                imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
-                endOfGame.setFill(Color.GREEN);
-                endOfGame.setText("YOU WON");
-                imgViewSmiley.setImage(imageSmiley1);
-            } 
-        });
         sPaneCenter.getChildren().add(gPane);
         sPaneCenter.getChildren().add(endOfGame);
         
