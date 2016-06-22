@@ -96,8 +96,6 @@ public class Board2D extends Board {
             random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
         }
-        
-        System.out.println("x:"+ random_row + " y:"+random_column);
         this.board2D[random_row][random_column].setBonus(true);        
     }
     
