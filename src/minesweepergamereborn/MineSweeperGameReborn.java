@@ -177,7 +177,7 @@ public class MineSweeperGameReborn extends Application {
                             image1 = new Image("./assets/HiddenBox.PNG");
                             caseView.setImage(image1);
                         }
-
+                        
                         // Case : the box is a mine
                         if (game.getBox(col,row).isTrapped() && game.getBox(col, row).isVisible()) {
                             trapped = true;
@@ -195,8 +195,14 @@ public class MineSweeperGameReborn extends Application {
                                         caseView.setImage(image1);
                                         break;
                                     case 1:
-                                        image1 = new Image("./assets/One.PNG");
-                                        caseView.setImage(image1);
+                                        // Case : the box is bonus
+                                        if (game.getBox(col,row).isBonus()){
+                                            image1 = new Image("./assets/Bonus.PNG");
+                                            caseView.setImage(image1);
+                                        } else {
+                                            image1 = new Image("./assets/One.PNG");
+                                            caseView.setImage(image1); 
+                                        }
                                         break;
                                     case 2:
                                         image1 = new Image("./assets/Two.PNG");
@@ -258,7 +264,11 @@ public class MineSweeperGameReborn extends Application {
                             currentBox.leftClic();
                             imageSmiley1 = new Image ("./assets/NeutralSmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);
-                        } else if (currentBox.isTrapped()) {
+                        } else if(currentBox.isBonus()){
+                            currentBox.leftClic();
+                            imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
+                            imgViewSmiley.setImage(imageSmiley1);
+                        }else if (currentBox.isTrapped()) {
                             game.getBox(colIndex, rowIndex).discover(currentBox);
                             imageSmiley1 = new Image ("./assets/SadSmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);

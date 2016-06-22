@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Observable;
 
 /**
  *
@@ -53,6 +52,12 @@ public abstract class Board {
     public void generateMineTrapped(){}
     
     /**
+     * public void generateMineBonus
+     * Called by generateBoard method to generate a bonus box
+     */
+    public void generateBonusBox(){}
+    
+    /**
      * public void addNumberMineTrapped
      * Finds number of mines trapped for each box of the game
      */
@@ -64,5 +69,11 @@ public abstract class Board {
      * @return an ArrayList containing all the neighbors
      */
     public ArrayList<Box> giveNeighbors(Box b){return null;}
+    
+    /**
+     * public ArrayList giveEmptyBoxes
+     * @return an ArrayList containing all the empty boxes of the game
+     */
+    public ArrayList<Box> giveOneBoxes(){return null;}
     
 }

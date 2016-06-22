@@ -52,7 +52,7 @@ public class Board2D extends Board {
         for (int i = 0; i < this.nb_row_columns; i++){
             for (int j = 0 ; j < this.nb_row_columns; j++){
                 if (this.board2D[i][j] == null){  
-                    Box b = new Box(false,false,false,0,this);
+                    Box b = new Box(false,false,false,0,this,false);
                     this.board2D[i][j] = b;
                     int[] position = new int[2];
                     position[0] = i; position [1] = j;
@@ -62,6 +62,8 @@ public class Board2D extends Board {
         }
         // We finally update number of neighbors trapped for each box
         addNumberMineTrapped();
+        // we then generate the bonus box
+        generateBonusBox();
     }
     
     @Override
@@ -76,13 +78,29 @@ public class Board2D extends Board {
                 random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             }
             
-            Box b = new Box(false,true,false,0,this);
+            Box b = new Box(false,true,false,0,this,false);
             this.board2D[random_row][random_column] = b;
             int[] position = new int[2];
             position[0] = random_row; position [1] = random_column;
             this.boxPosition.put(b, position);
         }
     }
+    
+    @Override
+    public void generateBonusBox(){
+        int random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
+        int random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
+
+        // We check if there's no mine already : if this is the case, we have to generate new indexes
+        while((this.board2D[random_row][random_column].getNumberOfNeighborTrapped() != 1) || this.board2D[random_row][random_column].isTrapped()){
+            random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
+            random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
+        }
+        
+        System.out.println("x:"+ random_row + " y:"+random_column);
+        this.board2D[random_row][random_column].setBonus(true);        
+    }
+    
     
     @Override
     public void addNumberMineTrapped(){
@@ -142,5 +160,19 @@ public class Board2D extends Board {
            neighborList.add(this.board2D[posX-1][posY+1]);
        }
         return neighborList;
+    }
+    
+    @Override
+    public ArrayList<Box> giveOneBoxes(){
+        ArrayList<Box> emptyBoxes = new ArrayList<>();
+        for (int i = 0; i < this.nb_row_columns; i++){
+            for (int j = 0 ; j < this.nb_row_columns; j++){
+                Box b = this.board2D[i][j];
+                if (b.getNumberOfNeighborTrapped() == 1){
+                    emptyBoxes.add(b);
+                }
+            }
+        }
+        return emptyBoxes;
     }
 }
