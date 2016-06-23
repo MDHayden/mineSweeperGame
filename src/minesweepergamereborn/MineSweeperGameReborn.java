@@ -187,7 +187,7 @@ public class MineSweeperGameReborn extends Application {
                             endOfGame.setFill(Color.RED);
                             endOfGame.setText("GAME OVER");
                             gPane.setDisable(true);
-                        } else if(game.getBox(col, row) instanceof BoxDiagonal) {
+                        } else if((game.getBox(col, row) instanceof BoxDiagonal) && (game.getBox(col, row).isVisible())) {
                             image1 = new Image("./assets/Diagonal.PNG");
                             caseView.setImage(image1);
                         } else {

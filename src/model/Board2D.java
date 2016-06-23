@@ -89,12 +89,12 @@ public class Board2D extends Board {
     // TODO : Find a way to factorise this part of the code
     @Override
     public void generateSpecialBoxes(){
-        int random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
-        int random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
+        int random_row = (int)(Math.random() * this.nb_row_columns);
+        int random_column = (int)(Math.random() * this.nb_row_columns);
         // We check if there's no mine already : if this is the case, we have to generate new indexes
         while((this.board2D[random_row][random_column].getNumberOfNeighborTrapped() != 1) || this.board2D[random_row][random_column].isTrapped()){
-            random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
-            random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
+            random_row = (int)(Math.random() * this.nb_row_columns);
+            random_column = (int)(Math.random() * this.nb_row_columns);
         }
         BoxStar bonus = new BoxStar(false, false , false, 1, this);
         this.board2D[random_row][random_column] = bonus;
@@ -102,21 +102,19 @@ public class Board2D extends Board {
         position[0] = random_row; position [1] = random_column;
         this.boxPosition.put(bonus, position);
         
-        random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
-        random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
+        random_row = (int)(Math.random() * this.nb_row_columns);
+        random_column = (int)(Math.random() * this.nb_row_columns);
         // We check if there's no mine already : if this is the case, we have to generate new indexes
         while((this.board2D[random_row][random_column].isTrapped()) || this.board2D[random_row][random_column] instanceof BoxStar){
-            random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
-            random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
+            random_row = (int)(Math.random() * this.nb_row_columns);
+            random_column = (int)(Math.random() * this.nb_row_columns);
         }
-        System.out.println(random_row + " " + random_column);
         BoxDiagonal bonus2 = new BoxDiagonal(false, false , false, this.board2D[random_row][random_column].getNumberOfNeighborTrapped(), this);
         this.board2D[random_row][random_column] = bonus2;
         int[] position2 = new int[2];
         position2[0] = random_row; position2 [1] = random_column;
         this.boxPosition.put(bonus2, position2);
     }
-    
     
     @Override
     public void addNumberMineTrapped(){
