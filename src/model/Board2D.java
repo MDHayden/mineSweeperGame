@@ -96,7 +96,7 @@ public class Board2D extends Board {
             random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
         }
-        BoxBonus bonus = new BoxBonus(false, false , false, 1, this , true);
+        BoxStar bonus = new BoxStar(false, false , false, 1, this , true);
         this.board2D[random_row][random_column] = bonus;        
     }
     

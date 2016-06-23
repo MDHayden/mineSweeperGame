@@ -24,7 +24,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Board2D;
 import model.Box;
-import model.BoxBonus;
+import model.BoxStar;
 
 /**
  *
@@ -195,7 +195,7 @@ public class MineSweeperGameReborn extends Application {
                                         break;
                                     case 1:
                                         // Case : the box is bonus
-                                        if (game.getBox(col,row) instanceof BoxBonus){
+                                        if (game.getBox(col,row) instanceof BoxStar){
                                             image1 = new Image("./assets/Bonus.PNG");
                                             caseView.setImage(image1);
                                         } else {
@@ -262,7 +262,7 @@ public class MineSweeperGameReborn extends Application {
                             currentBox.leftClic();
                             imageSmiley1 = new Image ("./assets/NeutralSmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);
-                        } else if(currentBox instanceof BoxBonus){
+                        } else if(currentBox instanceof BoxStar){
                             currentBox.leftClic();
                             imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);

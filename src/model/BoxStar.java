@@ -8,10 +8,10 @@ import java.util.ArrayList;
  * 
  */
 
-public class BoxBonus extends Box {
+public class BoxStar extends Box {
     private boolean bonus;
     
-    public BoxBonus(boolean containsFlag, boolean isTrapped, boolean isVisible, int numberOfNeighborTrapped, Board b, boolean isBonus) {
+    public BoxStar(boolean containsFlag, boolean isTrapped, boolean isVisible, int numberOfNeighborTrapped, Board b, boolean isBonus) {
         super(containsFlag,isTrapped,isVisible,numberOfNeighborTrapped,b);
         this.bonus = isBonus;
     }
