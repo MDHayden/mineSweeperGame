@@ -9,17 +9,16 @@ import java.util.Observable;
  */
 
 public class Box extends Observable{
-    private boolean flag, trapped, visible, bonus;
+    private boolean flag, trapped, visible;
     private int numberOfNeighborTrapped;
     private final Board game;
     
-    public Box(boolean containsFlag, boolean isTrapped, boolean isVisible, int numberOfNeighborTrapped, Board b, boolean isBonus) {
+    public Box(boolean containsFlag, boolean isTrapped, boolean isVisible, int numberOfNeighborTrapped, Board b) {
         this.flag = containsFlag;
         this.trapped = isTrapped;
         this.visible = isVisible;
         this.numberOfNeighborTrapped = numberOfNeighborTrapped;
         this.game = b;
-        this.bonus = isBonus;
     }
     
     // Getters & setters
@@ -43,10 +42,6 @@ public class Box extends Observable{
     public boolean isVisible() {
         return visible;
     }
-
-    public boolean isBonus() {
-        return bonus;
-    }    
     
     public void setVisible(boolean visible) {
         this.visible = visible;
@@ -63,17 +58,22 @@ public class Box extends Observable{
     public Board getGame() {
         return game;
     }
-
-    public void setBonus(boolean bonus) {
-        this.bonus = bonus;
-    }
     
+    /**
+     * public void discover
+     * @param b Given box we will discover
+     */
     public void discover(Box b){
         updateBox(b);        
         setChanged();
         notifyObservers();
     }
     
+    /**
+     * public void discover
+     * called by discover() method
+     * @param b Given box we will discover
+     */
     public void updateBox(Box b){        
         if(!b.isFlag() && !b.isVisible()) {
             b.setVisible(true);
@@ -89,6 +89,10 @@ public class Box extends Observable{
         }
     }
     
+    /**
+     * public void findNumberOfMinesTrapped
+     * finds and set number of mines around the box
+     */
     public void findNumberOfMinesTrapped(){
         int numberOfMinesTrapped=0;
         ArrayList<Box> neighbors = this.getGame().giveNeighbors(this);
@@ -101,15 +105,10 @@ public class Box extends Observable{
         this.setNumberOfNeighborTrapped(numberOfMinesTrapped);
     }
     
-    public void revealOneBoxes(){
-        ArrayList<Box> boxes = this.getGame().giveOneBoxes();        
-        for (Box b : boxes){
-            b.setVisible(true);
-        }
-        setChanged();
-        notifyObservers();
-    }
-    
+    /**
+     * public void rightClic
+     * handles right clic and updates model
+     */
     public void rightClic(){
         if(!this.isFlag()){
             this.setFlag(true);
@@ -122,12 +121,14 @@ public class Box extends Observable{
         notifyObservers();
     }
     
+    /**
+     * public void leftClic
+     * handles left clic and updates model
+     */
     public void leftClic(){
         if(this.isFlag()){
             this.setFlag(false);
             this.getGame().setNb_flags(this.getGame().getNb_flags()-1);
-        } else if(this.isBonus()){
-            revealOneBoxes();
         }
         setChanged();
         notifyObservers();

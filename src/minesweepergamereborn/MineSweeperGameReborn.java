@@ -1,8 +1,6 @@
 package minesweepergamereborn;
 
 import java.util.Observable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
@@ -26,6 +24,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Board2D;
 import model.Box;
+import model.BoxBonus;
 
 /**
  *
@@ -196,7 +195,7 @@ public class MineSweeperGameReborn extends Application {
                                         break;
                                     case 1:
                                         // Case : the box is bonus
-                                        if (game.getBox(col,row).isBonus()){
+                                        if (game.getBox(col,row) instanceof BoxBonus){
                                             image1 = new Image("./assets/Bonus.PNG");
                                             caseView.setImage(image1);
                                         } else {
@@ -236,7 +235,6 @@ public class MineSweeperGameReborn extends Application {
                             }
                         }
                     }
-                    
                     // Case : player won the game
                     if (!trapped && (game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
                         gPane.setDisable(true);
@@ -264,7 +262,7 @@ public class MineSweeperGameReborn extends Application {
                             currentBox.leftClic();
                             imageSmiley1 = new Image ("./assets/NeutralSmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);
-                        } else if(currentBox.isBonus()){
+                        } else if(currentBox instanceof BoxBonus){
                             currentBox.leftClic();
                             imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);

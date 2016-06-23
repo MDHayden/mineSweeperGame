@@ -52,7 +52,7 @@ public class Board2D extends Board {
         for (int i = 0; i < this.nb_row_columns; i++){
             for (int j = 0 ; j < this.nb_row_columns; j++){
                 if (this.board2D[i][j] == null){  
-                    Box b = new Box(false,false,false,0,this,false);
+                    Box b = new Box(false,false,false,0,this);
                     this.board2D[i][j] = b;
                     int[] position = new int[2];
                     position[0] = i; position [1] = j;
@@ -78,7 +78,7 @@ public class Board2D extends Board {
                 random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             }
             
-            Box b = new Box(false,true,false,0,this,false);
+            Box b = new Box(false,true,false,0,this);
             this.board2D[random_row][random_column] = b;
             int[] position = new int[2];
             position[0] = random_row; position [1] = random_column;
@@ -96,7 +96,8 @@ public class Board2D extends Board {
             random_row = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
             random_column = (int)(Math.random() * (this.nb_row_columns-0)) + 0;
         }
-        this.board2D[random_row][random_column].setBonus(true);        
+        BoxBonus bonus = new BoxBonus(false, false , false, 1, this , true);
+        this.board2D[random_row][random_column] = bonus;        
     }
     
     
