@@ -9,10 +9,11 @@ import java.util.ArrayList;
  */
 
 public abstract class Board {
-    private int nb_mine_trapped, nb_box_discovered, nb_flags;
+    private int nb_mine_trapped, nb_box_discovered, nb_flags, nb_special_boxes;
       
     Board(int mines){
         this.nb_mine_trapped = mines;
+        this.nb_special_boxes = 2;
     }
     
     public int getNbMineTrapped() {
@@ -55,7 +56,7 @@ public abstract class Board {
      * public void generateMineBonus
      * Called by generateBoard method to generate a bonus box
      */
-    public void generateBonusBox(){}
+    public void generateSpecialBoxes(){}
     
     /**
      * public void addNumberMineTrapped
@@ -75,5 +76,12 @@ public abstract class Board {
      * @return an ArrayList containing all the empty boxes of the game
      */
     public ArrayList<Box> giveOneBoxes(){return null;}
+    
+    /**
+     * public ArrayList giveDiagonalBoxes
+     * @param b Given box for which we wil reveal the diagonal
+     * @return an ArrayList containing all boxes in the diagonal of a box
+     */
+    public ArrayList<Box> giveDiagonalBoxes(Box b){return null;}
     
 }

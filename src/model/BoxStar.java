@@ -9,18 +9,9 @@ import java.util.ArrayList;
  */
 
 public class BoxStar extends Box {
-    private boolean bonus;
     
-    public BoxStar(boolean containsFlag, boolean isTrapped, boolean isVisible, int numberOfNeighborTrapped, Board b, boolean isBonus) {
+    public BoxStar(boolean containsFlag, boolean isTrapped, boolean isVisible, int numberOfNeighborTrapped, Board b) {
         super(containsFlag,isTrapped,isVisible,numberOfNeighborTrapped,b);
-        this.bonus = isBonus;
-    }
-    public boolean isBonus() {
-        return bonus;
-    }
-
-    public void setBonus(boolean bonus) {
-        this.bonus = bonus;
     }
     
     /**
@@ -42,7 +33,7 @@ public class BoxStar extends Box {
         if(this.isFlag()){
             this.setFlag(false);
             this.getGame().setNb_flags(this.getGame().getNb_flags()-1);
-        } else if(this.isBonus()){
+        } else if(this instanceof BoxStar){
             revealOneBoxes();
         }
         setChanged();

@@ -3,6 +3,7 @@ package minesweepergamereborn;
 import java.util.Observable;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -24,6 +25,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Board2D;
 import model.Box;
+import model.BoxDiagonal;
 import model.BoxStar;
 
 /**
@@ -185,6 +187,9 @@ public class MineSweeperGameReborn extends Application {
                             endOfGame.setFill(Color.RED);
                             endOfGame.setText("GAME OVER");
                             gPane.setDisable(true);
+                        } else if(game.getBox(col, row) instanceof BoxDiagonal) {
+                            image1 = new Image("./assets/Diagonal.PNG");
+                            caseView.setImage(image1);
                         } else {
                             if (game.getBox(col, row).isVisible()) {
                                 nbOfNeighborTrapped = game.getBox(col, row).getNumberOfNeighborTrapped();
@@ -266,7 +271,11 @@ public class MineSweeperGameReborn extends Application {
                             currentBox.leftClic();
                             imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);
-                        }else if (currentBox.isTrapped()) {
+                        } else if(currentBox instanceof BoxDiagonal){
+                            currentBox.leftClic();
+                            imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
+                            imgViewSmiley.setImage(imageSmiley1);
+                        } else if (currentBox.isTrapped()) {
                             game.getBox(colIndex, rowIndex).discover(currentBox);
                             imageSmiley1 = new Image ("./assets/SadSmiley.PNG");
                             imgViewSmiley.setImage(imageSmiley1);
