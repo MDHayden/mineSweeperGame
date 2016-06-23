@@ -62,15 +62,20 @@ public class Box extends Observable{
     /**
      * public void discover
      * @param b Given box we will discover
+     * @param gameOver
      */
-    public void discover(Box b){
-        updateBox(b);        
+    public void discover(Box b, boolean gameOver){
+        if (!gameOver){
+            updateBox(b); 
+        } else {
+            discoverBoard(b);
+        }               
         setChanged();
         notifyObservers();
     }
     
     /**
-     * public void discover
+     * public void updateBox
      * called by discover() method
      * @param b Given box we will discover
      */
@@ -85,6 +90,21 @@ public class Box extends Observable{
                         updateBox(n);
                     }
                 }
+            }
+        }
+    }
+    
+    /**
+     * public void discoverBoard
+     * called by discover() method
+     * @param b Given box from which we will discover all the board
+     */
+    public void discoverBoard(Box b){
+        if(!b.isVisible()) {
+            b.setVisible(true);
+            ArrayList<Box> neighbors = b.getGame().giveNeighbors(b);
+            for (Box n : neighbors) {
+                discoverBoard(n);
             }
         }
     }
