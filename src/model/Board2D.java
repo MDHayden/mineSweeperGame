@@ -113,7 +113,6 @@ public class Board2D extends Board {
         }
         BoxHide bonus3 = new BoxHide(false, false , false, this.board2D[indexes[0]][indexes[1]].getNumberOfNeighborTrapped(), this);
         addInLists(bonus3, indexes);
-        
     }
     
     @Override
