@@ -3,8 +3,6 @@ package minesweepergamereborn;
 import java.util.Observable;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import static javafx.application.Application.launch;
-import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -153,10 +151,9 @@ public class MineSweeperGameReborn extends Application {
                 ImageView imgView = new ImageView();
                 imgView.setImage(image);
                 gPane.add(imgView,i,j);
-                boolean gameOver = false;
                 
                 game.getBox(i, j).addObserver((Observable o, Object arg) -> {
-                    refresh(gPane, endOfGame, imgViewSmiley, gameOver);
+                    refresh(gPane, endOfGame, imgViewSmiley);
                 });
                 
                 imgView.setOnMouseClicked((MouseEvent event) -> {
@@ -209,7 +206,7 @@ public class MineSweeperGameReborn extends Application {
     }
     
     
-    public void refresh(GridPane gPane, Text endOfGame, ImageView imgViewSmiley, boolean gameOver){
+    public void refresh(GridPane gPane, Text endOfGame, ImageView imgViewSmiley){
         int nbOfNeighborTrapped = 0;
         Image image1, imageSmiley1;
         boolean trapped = false;
@@ -302,7 +299,7 @@ public class MineSweeperGameReborn extends Application {
             }
         }
         // Case : player won the game
-        if (!trapped && (game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped()) && !gameOver) {
+        if (!trapped && (game.getNb_box_discovered()) == (game.getNbRowColumns()*game.getNbRowColumns() - game.getNbMineTrapped())) {
             gPane.setDisable(true);
             imageSmiley1 = new Image ("./assets/HappySmiley.PNG");
             endOfGame.setFill(Color.GREEN);

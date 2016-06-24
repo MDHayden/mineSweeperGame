@@ -25,8 +25,10 @@ public class BoxHide extends Box {
                 b.setFlag(false);
                 this.getGame().setNb_flags(this.getGame().getNb_flags()-1);
             } else {
-                b.setVisible(false);
-                this.getGame().setNb_box_discovered(this.getGame().getNb_box_discovered()-1);
+                if(b.isVisible()){
+                    b.setVisible(false);
+                    this.getGame().setNb_box_discovered(this.getGame().getNb_box_discovered()-1); 
+                }
             }
         }
         setChanged();
