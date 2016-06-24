@@ -13,8 +13,8 @@ HOW TO USE
 
 Special boxes
 - Star box : Reveal all one boxes of the board
-- Lightning box : Reveal all boxes on the diagonal
-- Hide box : Hide a quarter of the board
+- Lightning box : Reveal all boxes on the diagonal of the box
+- Hide box : Hide quarter of the board
 
 Good luck and enjoy the game !
 
