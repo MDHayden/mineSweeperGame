@@ -11,12 +11,18 @@ HOW TO USE
 - If you're unlucky, you will discover a bomb and lose the game ;)
 - Otherwise, the number of bombs nearby will be displayed or game's board will be discovered
 
+Special boxes
+- Star box : Reveal all one boxes of the board
+- Lightning box : Reveal all boxes on the diagonal
+- Hide box : Hide a quarter of the board
+
 Good luck and enjoy the game !
 
 *********************************************************************************************************************************************
 FEATURES
 - Graphical interface (Java FX)
 - Three differents levels of difficulty : Easy, Medium and Hard
+- Bonus and Malus Boxes
 
 *********************************************************************************************************************************************
 SOON
