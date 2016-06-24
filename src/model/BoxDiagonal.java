@@ -23,9 +23,10 @@ public class BoxDiagonal extends Box {
         for (Box b : boxes){
             if(b.isTrapped()){
                 b.setFlag(true);
+                this.getGame().setNb_flags(this.getGame().getNb_flags()+1);
             } else {
+                b.setVisible(true);
                 this.getGame().setNb_box_discovered(this.getGame().getNb_box_discovered()+1);
-                b.setVisible(true); 
             }
         }
         setChanged();

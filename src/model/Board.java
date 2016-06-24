@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,7 +14,7 @@ public abstract class Board {
       
     Board(int mines){
         this.nb_mine_trapped = mines;
-        this.nb_special_boxes = 2;
+        this.nb_special_boxes = 3;
     }
     
     public int getNbMineTrapped() {
@@ -27,8 +28,12 @@ public abstract class Board {
     public int getNb_box_discovered() {
         return nb_box_discovered;
     }
+
+    public int getNb_special_boxes() {
+        return nb_special_boxes;
+    }
     
-     public void setNbMineTrapped(int nb) {
+    public void setNbMineTrapped(int nb) {
         this.nb_mine_trapped = nb;
     }
 
@@ -83,5 +88,18 @@ public abstract class Board {
      * @return an ArrayList containing all boxes in the diagonal of a box
      */
     public ArrayList<Box> giveDiagonalBoxes(Box b){return null;}
+    
+    /**
+     * public ArrayList giveQuarterOfGame
+     * @param b Given box for which we wil hide quarter of the game
+     * @return an ArrayList containing all boxes we have to hide
+     */
+    public List<Box> giveQuarterOfGame(Box b){return null;}
+    
+    /**
+     * public int[] generateIndexes
+     * @return an array containing random indexes
+     */
+    public int[] generateIndexes(){return null;}
     
 }

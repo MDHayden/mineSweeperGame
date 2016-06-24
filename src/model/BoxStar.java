@@ -21,8 +21,10 @@ public class BoxStar extends Box {
     public void revealOneBoxes(){
         ArrayList<Box> boxes = this.getGame().giveOneBoxes();        
         for (Box b : boxes){
-            this.getGame().setNb_box_discovered(this.getGame().getNb_box_discovered()+1);
-            b.setVisible(true);
+            if(!b.isVisible()){
+                this.getGame().setNb_box_discovered(this.getGame().getNb_box_discovered()+1);
+                b.setVisible(true);
+            }
         }
         setChanged();
         notifyObservers();

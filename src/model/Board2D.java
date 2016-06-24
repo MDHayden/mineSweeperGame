@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -86,34 +87,52 @@ public class Board2D extends Board {
         }
     }
     
-    // TODO : Find a way to factorise this part of the code
     @Override
     public void generateSpecialBoxes(){
-        int random_row = (int)(Math.random() * this.nb_row_columns);
-        int random_column = (int)(Math.random() * this.nb_row_columns);
+        int[] indexes;
+        
+        indexes = this.generateIndexes();
         // We check if there's no mine already : if this is the case, we have to generate new indexes
-        while((this.board2D[random_row][random_column].getNumberOfNeighborTrapped() != 1) || this.board2D[random_row][random_column].isTrapped()){
-            random_row = (int)(Math.random() * this.nb_row_columns);
-            random_column = (int)(Math.random() * this.nb_row_columns);
+        while((this.board2D[indexes[0]][indexes[1]].getNumberOfNeighborTrapped() != 1) || this.board2D[indexes[0]][indexes[1]].isTrapped()){
+            indexes = this.generateIndexes();
         }
         BoxStar bonus = new BoxStar(false, false , false, 1, this);
-        this.board2D[random_row][random_column] = bonus;
-        int[] position = new int[2];
-        position[0] = random_row; position [1] = random_column;
-        this.boxPosition.put(bonus, position);
+        addInLists(bonus, indexes);
         
-        random_row = (int)(Math.random() * this.nb_row_columns);
-        random_column = (int)(Math.random() * this.nb_row_columns);
         // We check if there's no mine already : if this is the case, we have to generate new indexes
-        while((this.board2D[random_row][random_column].isTrapped()) || this.board2D[random_row][random_column] instanceof BoxStar){
-            random_row = (int)(Math.random() * this.nb_row_columns);
-            random_column = (int)(Math.random() * this.nb_row_columns);
+        while((this.board2D[indexes[0]][indexes[1]].isTrapped()) || this.board2D[indexes[0]][indexes[1]] instanceof BoxStar){
+            indexes = this.generateIndexes();
         }
-        BoxDiagonal bonus2 = new BoxDiagonal(false, false , false, this.board2D[random_row][random_column].getNumberOfNeighborTrapped(), this);
-        this.board2D[random_row][random_column] = bonus2;
-        int[] position2 = new int[2];
-        position2[0] = random_row; position2 [1] = random_column;
-        this.boxPosition.put(bonus2, position2);
+        BoxDiagonal bonus2 = new BoxDiagonal(false, false , false, this.board2D[indexes[0]][indexes[1]].getNumberOfNeighborTrapped(), this);
+        addInLists(bonus2, indexes);
+        
+        // We check if there's no mine already : if this is the case, we have to generate new indexes
+        while((this.board2D[indexes[0]][indexes[1]].isTrapped()) || this.board2D[indexes[0]][indexes[1]] instanceof BoxStar
+                || this.board2D[indexes[0]][indexes[1]] instanceof BoxDiagonal){
+            indexes = this.generateIndexes();
+        }
+        BoxHide bonus3 = new BoxHide(false, false , false, this.board2D[indexes[0]][indexes[1]].getNumberOfNeighborTrapped(), this);
+        addInLists(bonus3, indexes);
+        
+    }
+    
+    @Override
+    public int[] generateIndexes(){
+        int[] indexes = new int[2];
+        indexes[0] = (int)(Math.random() * this.nb_row_columns);
+        indexes[1] = (int)(Math.random() * this.nb_row_columns);        
+        return indexes;
+    }
+    
+    /**
+     * public void addInLists()
+     * Adds an box and its position in hash map
+     * @param b Box
+     * @param position x and y indexes
+     */
+    public void addInLists(Box b, int[] position){
+        this.board2D[position[0]][position[1]] = b;
+        this.boxPosition.put(b, position);
     }
     
     @Override
@@ -218,5 +237,39 @@ public class Board2D extends Board {
             }
         }
         return diagonalBoxes;
+    }
+    
+    @Override
+    public List<Box> giveQuarterOfGame(Box b){
+        List<Box> quarterGame = new ArrayList<>();      
+        int[] currentBox = boxPosition.get(b);
+        int x = currentBox[0], y = currentBox[1], i=0, j=0;
+        int endi=0, endj=0, temp;
+        
+        if(x<=4 && y<=4){
+            i = 0; j = 0;
+            endi = 5; endj = 5;
+        } else if (x<=4 && y>4){
+            i = 0; j = 5;
+            endi = 5; endj = 10;
+        } else if (x>4 && y<=4) {
+            i = 5; j = 0;
+            endi = 10; endj = 5;
+        } else {
+            i = 5; j = 5;
+            endi = 10; endj = 10;
+        }
+        
+        temp = j;
+        
+        while (i < endi){
+            j = temp;
+            while (j < endj){
+                quarterGame.add(this.board2D[i][j]);
+                j++;
+            }
+            i++;
+        }
+        return quarterGame;
     }
 }
